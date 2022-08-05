@@ -99,6 +99,12 @@ const Login = () => {
               </Button>
             </Center>
           </Box>
+          <Center>
+            <div>not signed up? </div>
+            <Button onClick={() => navigate("/signup")} variant="outlined">
+              Sign up
+            </Button>
+          </Center>
         </Grid>
         <Grid item md={5} xs={12}>
           <svg
