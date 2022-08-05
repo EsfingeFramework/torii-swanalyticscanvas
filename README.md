@@ -32,4 +32,4 @@ You can get the latest version [here](nodejs.org)
 `npm install` would be installing the dependecies needed.
 
 After that you're good to go in the front end side,
-Just need to run `npm start` and open the project on [localhost:3000](localhost:3000)
+Just need to run `npm start` and open the project on [http://localhost:3000](http://localhost:3000)
