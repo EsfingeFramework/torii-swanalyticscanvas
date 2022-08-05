@@ -27,9 +27,9 @@ After running the mongodb, it is now time to run the backend-server with this co
 ### ui-client
 
 If you don't have `node` installed on your machine,
-You can get the latest version here: `nodejs.org`
+You can get the latest version [here](nodejs.org)
 
 `npm install` would be installing the dependecies needed.
 
 After that you're good to go in the front end side,
-Just need to run `npm start` and open the project on `localhost:3000`
+Just need to run `npm start` and open the project on [localhost:3000](localhost:3000)
