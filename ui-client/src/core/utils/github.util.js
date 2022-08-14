@@ -1,4 +1,4 @@
-export function toParams(query) {
+export const toParams = (query) => {
   const q = query.replace(/^\??\//, "");
 
   return q.split("&").reduce((values, param) => {
@@ -8,9 +8,9 @@ export function toParams(query) {
 
     return values;
   }, {});
-}
+};
 
-export function toQuery(params, delimiter = "&") {
+export const toQuery = (params, delimiter = "&") => {
   const keys = Object.keys(params);
 
   return keys.reduce((str, key, index) => {
@@ -22,4 +22,4 @@ export function toQuery(params, delimiter = "&") {
 
     return query;
   }, "");
-}
+};

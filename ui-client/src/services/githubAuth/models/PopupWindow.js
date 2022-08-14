@@ -1,6 +1,5 @@
-import { toParams, toQuery } from "./../../../utils";
+import { toParams, toQuery } from "../../../core/utils";
 
-// TODO functional component
 class PopupWindow {
   constructor(id, url, options = {}) {
     this.id = id;
