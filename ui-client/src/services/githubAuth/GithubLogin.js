@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { useGithubAuth } from "../../context/GithubAuthContext";
 import { githubConfig } from "../../core/config/github.config";
 
-import PopupWindow from "./Popupwindow";
-import { toQuery } from "./utils";
+import PopupWindow from "./models/PopupWindow";
+import { toQuery } from "./../../core/utils/github.util";
 
 const popupHeight = 650;
 const popupWidth = 500;
@@ -13,8 +13,8 @@ const GithubLogin = (props) => {
   const { token, getToken } = useGithubAuth();
 
   useEffect(() => {
-    console.log(token);
-  }, []);
+    console.log("token is:", token);
+  }, [token]);
 
   const handleSuccess = (data) => {
     if (!data.code) {
