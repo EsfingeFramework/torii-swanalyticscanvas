@@ -7,10 +7,12 @@ import { IconButton } from "@mui/material";
 import axios from "axios";
 import {
   Center,
+  Input,
   MantineProvider,
   Progress,
   Space,
   Textarea,
+  TextInput,
   Title,
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
@@ -18,15 +20,24 @@ import NotesIcon from "@mui/icons-material/Notes";
 import { Modal, Button } from "@mantine/core";
 import { MultiSelect } from "@mantine/core";
 import { Grid } from "@mantine/core";
+import GithubLogin from "./services/githubAuth/GithubLogin";
+import { useGithubAuth } from "./context/GithubAuthContext";
 
 const Tasks = () => {
   const location = useLocation();
   //const pId = location.state.pId;
+  const { isToken, token } = useGithubAuth();
   const pId = location.state.pId;
   const [description, setDescription] = React.useState("");
+  const [label, setLabel] = React.useState("");
+  const [issuePopupIsOpen, setIssuePopupIsOpen] = useState(false);
   const handleDescriptionChange = (event) => {
     setDescription(event.target.value);
   };
+
+  useEffect(() => {
+    console.log("token is: ", token);
+  }, [token]);
 
   let today = new Date();
   let dd = String(today.getDate()).padStart(2, "0");
@@ -49,8 +60,8 @@ const Tasks = () => {
     setMessages(event.target.value);
   };
   const [opened, setOpened] = useState(false);
-  const handleOpen = () => setOpened(true);
-  const handleClose = () => setOpened(false);
+  const handleOpen = () => setIssuePopupIsOpen(true);
+  const handleClose = () => setIssuePopupIsOpen(false);
 
   const addTask = (e) => {
     e.preventDefault();
@@ -105,8 +116,24 @@ const Tasks = () => {
   yyyy = deadline.getFullYear();
   deadline = dd + "-" + mm + "-" + yyyy;
 
+  const onSuccess = (response) => console.log(response);
+  const onFailure = (response) => console.error(response);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
+      <Button
+        variant="outline"
+        text
+        color="green"
+        onClick={() => setIssuePopupIsOpen(true)}
+      >
+        Get Github Issues
+      </Button>
+      <Center>
+        {!isToken && (
+          <GithubLogin onSuccess={onSuccess} onFailure={onFailure} />
+        )}
+      </Center>
       <Center style={{ marginBottom: "2%" }}>
         <Title order={1}>
           Key Issue
@@ -180,6 +207,38 @@ const Tasks = () => {
         <Center>
           <Button variant="outline" text color="green" onClick={addTask}>
             Apply
+          </Button>
+        </Center>
+      </Modal>
+      <Modal
+        opened={issuePopupIsOpen}
+        onClose={() => {
+          setIssuePopupIsOpen(false);
+          setLabel("");
+        }}
+        title="Get Issues from Github"
+      >
+        {isToken
+          ? "You are connected to your github account"
+          : "Please first connect to your github account"}
+        <br />
+        <br />
+        <TextInput
+          placeholder="Add your label"
+          label="Add your label"
+          value={label}
+          onChange={(event) => setLabel(event.target.value)}
+        />
+        <br />
+        <br />
+        <Center>
+          <Button
+            variant="outline"
+            text
+            color="green"
+            onClick={() => console.info(label)}
+          >
+            Get Issues
           </Button>
         </Center>
       </Modal>

@@ -6,6 +6,7 @@ const GithubAuthContext = createContext({});
 
 const GithubAuthProvider = (props) => {
   const [token, setToken] = useState("");
+  const [isToken, setIstoken] = useState(false);
 
   const getToken = useCallback(async (code) => {
     axios
@@ -25,6 +26,7 @@ const GithubAuthProvider = (props) => {
         }
       )
       .then((response) => {
+        setIstoken(true);
         setToken(response.data);
       });
   }, []);
@@ -32,6 +34,7 @@ const GithubAuthProvider = (props) => {
   const githubAuthContextValue = {
     token,
     getToken,
+    isToken,
   };
 
   return (

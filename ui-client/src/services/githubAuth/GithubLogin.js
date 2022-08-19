@@ -10,11 +10,11 @@ const popupWidth = 500;
 
 const GithubLogin = (props) => {
   const { onFailure, onSuccess, disabled = false } = props;
-  const { token, getToken } = useGithubAuth();
+  const { token, getToken, istoken } = useGithubAuth();
 
   useEffect(() => {
     console.log("token is:", token);
-  }, [token]);
+  }, [token, istoken]);
 
   const handleSuccess = (data) => {
     if (!data.code) {
