@@ -9,7 +9,7 @@ const GithubIssues = ({ issues }) => {
     <>
       {issues.map((issue, index) => {
         return (
-          <Grid.Col md={3} sm={12}>
+          <Grid.Col key={index} md={3} sm={12}>
             <TaskComp
               key={issue.id}
               id={issue.id}

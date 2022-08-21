@@ -29,14 +29,14 @@ import { useRequestHeaders } from "./api/header/useRequestHeaders";
 const Tasks = () => {
   const location = useLocation();
   //const pId = location.state.pId;
-  const { isToken, token } = useGithubAuth();
+  const { issues, fetchIssues, isToken, token } = useGithubAuth();
   const pId = location.state.pId;
   const [description, setDescription] = React.useState("");
   const [label, setLabel] = React.useState("");
   const [issuePopupIsOpen, setIssuePopupIsOpen] = useState(false);
   const requestHeaders = useRequestHeaders("application/json");
 
-  const [issues, setIssues] = useState([]);
+  // const [issues, setIssues] = useState([]);
 
   const handleDescriptionChange = (event) => {
     setDescription(event.target.value);
@@ -123,17 +123,9 @@ const Tasks = () => {
   const onFailure = (response) => console.error(response);
 
   const handleGetIssues = () => {
-    requestHeaders["params"] = { filter: "subscribed", labels: label };
-
-    axios
-      .get(
-        "https://enigmatic-reaches-35840.herokuapp.com/https://api.github.com/user/issues",
-        requestHeaders
-      )
-      .then((response) => {
-        setIssues(response.data);
-        setIssuePopupIsOpen(false);
-      });
+    fetchIssues(label, token);
+    setIssuePopupIsOpen(false);
+    setLabel("");
   };
 
   return (

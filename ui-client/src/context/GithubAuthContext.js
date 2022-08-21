@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { createContext, useState, useCallback } from "react";
+import { useRequestHeaders } from "../api/header/useRequestHeaders";
 import { githubConfig } from "./../core/config/github.config";
 import { getTokenAccess } from "./../core/utils/string.util";
 
@@ -8,6 +9,28 @@ const GithubAuthContext = createContext({});
 const GithubAuthProvider = (props) => {
   const [token, setToken] = useState("");
   const [isToken, setIstoken] = useState(false);
+
+  const [issues, setIssues] = useState([]);
+
+  const fetchIssues = useCallback((labels, auth) => {
+    const requestHeaders = {
+      headers: {
+        Authorization: "Token " + auth,
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "X-Requested-With": "XMLHttpRequest",
+      },
+    };
+    requestHeaders["params"] = { filter: "subscribed", labels: labels };
+    axios
+      .get(
+        "https://enigmatic-reaches-35840.herokuapp.com/https://api.github.com/user/issues",
+        requestHeaders
+      )
+      .then((response) => {
+        setIssues(response.data);
+      });
+  }, []);
 
   const getToken = useCallback(async (code) => {
     axios
@@ -36,6 +59,8 @@ const GithubAuthProvider = (props) => {
     token,
     getToken,
     isToken,
+    fetchIssues,
+    issues,
   };
 
   return (
