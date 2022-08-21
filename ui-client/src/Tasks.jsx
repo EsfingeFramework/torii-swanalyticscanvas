@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import TaskComp from "./components/TaskComp";
 import Box from "@mui/material/Box";
 import { useLocation } from "react-router-dom";
@@ -22,6 +22,9 @@ import { MultiSelect } from "@mantine/core";
 import { Grid } from "@mantine/core";
 import GithubLogin from "./services/githubAuth/GithubLogin";
 import { useGithubAuth } from "./context/GithubAuthContext";
+import { useGetIssues } from "./api/githubRepository/useGithub";
+import GithubIssues from "./components/Github/GithubIssues";
+import { useRequestHeaders } from "./api/header/useRequestHeaders";
 
 const Tasks = () => {
   const location = useLocation();
@@ -31,13 +34,13 @@ const Tasks = () => {
   const [description, setDescription] = React.useState("");
   const [label, setLabel] = React.useState("");
   const [issuePopupIsOpen, setIssuePopupIsOpen] = useState(false);
+  const requestHeaders = useRequestHeaders("application/json");
+
+  const [issues, setIssues] = useState([]);
+
   const handleDescriptionChange = (event) => {
     setDescription(event.target.value);
   };
-
-  useEffect(() => {
-    console.log("token is: ", token);
-  }, [token]);
 
   let today = new Date();
   let dd = String(today.getDate()).padStart(2, "0");
@@ -60,8 +63,8 @@ const Tasks = () => {
     setMessages(event.target.value);
   };
   const [opened, setOpened] = useState(false);
-  const handleOpen = () => setIssuePopupIsOpen(true);
-  const handleClose = () => setIssuePopupIsOpen(false);
+  const handleOpen = () => setOpened(true);
+  const handleClose = () => setOpened(false);
 
   const addTask = (e) => {
     e.preventDefault();
@@ -119,6 +122,20 @@ const Tasks = () => {
   const onSuccess = (response) => console.log(response);
   const onFailure = (response) => console.error(response);
 
+  const handleGetIssues = () => {
+    requestHeaders["params"] = { filter: "subscribed", labels: label };
+
+    axios
+      .get(
+        "https://enigmatic-reaches-35840.herokuapp.com/https://api.github.com/user/issues",
+        requestHeaders
+      )
+      .then((response) => {
+        setIssues(response.data);
+        setIssuePopupIsOpen(false);
+      });
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Button
@@ -149,6 +166,11 @@ const Tasks = () => {
         </Title>
       </Center>
       <Grid style={{ marginLeft: "2%", marginRight: "2%" }}>
+        Github Issues
+        {issues && <GithubIssues issues={issues} />}
+      </Grid>
+      <Grid style={{ marginLeft: "2%", marginRight: "2%" }}>
+        System Issues
         {gets.map((get, index) => {
           if (1 === 1)
             return (
@@ -236,7 +258,8 @@ const Tasks = () => {
             variant="outline"
             text
             color="green"
-            onClick={() => console.info(label)}
+            onClick={handleGetIssues}
+            disabled={!isToken}
           >
             Get Issues
           </Button>

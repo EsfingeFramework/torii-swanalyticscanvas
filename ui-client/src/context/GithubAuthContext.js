@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { createContext, useState, useCallback } from "react";
 import { githubConfig } from "./../core/config/github.config";
+import { getTokenAccess } from "./../core/utils/string.util";
 
 const GithubAuthContext = createContext({});
 
@@ -27,7 +28,7 @@ const GithubAuthProvider = (props) => {
       )
       .then((response) => {
         setIstoken(true);
-        setToken(response.data);
+        setToken(getTokenAccess(response.data));
       });
   }, []);
 
