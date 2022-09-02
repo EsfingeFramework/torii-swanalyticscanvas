@@ -1,19 +1,18 @@
 import React from "react";
 import TaskComp from "../TaskComp";
 import { Grid } from "@mantine/core";
-import { useState } from "react";
-import { useEffect } from "react";
 
 const GithubIssues = ({ issues }) => {
   return (
     <>
+      Github Issues
       {issues.map((issue, index) => {
         return (
           <Grid.Col key={index} md={3} sm={12}>
             <TaskComp
               key={issue.id}
               id={issue.id}
-              description={issue.body}
+              description={issue.title}
               date={issue.created_at}
               deadline={issue.milestone}
               members={issue.assignees}

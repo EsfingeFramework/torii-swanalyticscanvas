@@ -29,11 +29,16 @@ import { useRequestHeaders } from "./api/header/useRequestHeaders";
 const Tasks = () => {
   const location = useLocation();
   //const pId = location.state.pId;
-  const { issues, fetchIssues, isToken, token } = useGithubAuth();
+  const { issues, fetchIssues, isToken, createIssue, owner, token } =
+    useGithubAuth();
   const pId = location.state.pId;
   const [description, setDescription] = React.useState("");
   const [label, setLabel] = React.useState("");
   const [issuePopupIsOpen, setIssuePopupIsOpen] = useState(false);
+  const [createIssueIsOpen, setCreateIssueIsOpen] = useState(false);
+  const [issueRepo, setIssueRepo] = useState("");
+  const [issueName, setIssueName] = useState("");
+  const [issueLabel, setIssueLabel] = useState("");
   const requestHeaders = useRequestHeaders("application/json");
 
   // const [issues, setIssues] = useState([]);
@@ -128,6 +133,14 @@ const Tasks = () => {
     setLabel("");
   };
 
+  const handleCreateIssue = () => {
+    createIssue(issueLabel, issueName, issueRepo, token, owner);
+    setCreateIssueIsOpen(false);
+    setIssueRepo("");
+    setIssueName("");
+    setIssueLabel("");
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Button
@@ -137,6 +150,17 @@ const Tasks = () => {
         onClick={() => setIssuePopupIsOpen(true)}
       >
         Get Github Issues
+      </Button>
+      <Button
+        variant="outline"
+        text
+        color="green"
+        style={{
+          marginLeft: "10px",
+        }}
+        onClick={() => setCreateIssueIsOpen(true)}
+      >
+        Create an issue on Github
       </Button>
       <Center>
         {!isToken && (
@@ -158,7 +182,6 @@ const Tasks = () => {
         </Title>
       </Center>
       <Grid style={{ marginLeft: "2%", marginRight: "2%" }}>
-        Github Issues
         {issues && <GithubIssues issues={issues} />}
       </Grid>
       <Grid style={{ marginLeft: "2%", marginRight: "2%" }}>
@@ -254,6 +277,53 @@ const Tasks = () => {
             disabled={!isToken}
           >
             Get Issues
+          </Button>
+        </Center>
+      </Modal>
+      <Modal
+        opened={createIssueIsOpen}
+        onClose={() => {
+          setCreateIssueIsOpen(false);
+        }}
+        title="Create an issue on Github"
+      >
+        {isToken
+          ? "You are connected to your github account"
+          : "Please first connect to your github account"}
+        <br />
+        <br />
+
+        <TextInput
+          placeholder="Repository"
+          label="Repository Name"
+          value={issueRepo}
+          onChange={(event) => setIssueRepo(event.target.value)}
+        />
+        <br />
+        <TextInput
+          placeholder="Issue"
+          label="Issue Name"
+          value={issueName}
+          onChange={(event) => setIssueName(event.target.value)}
+        />
+        <br />
+        <TextInput
+          placeholder="Label"
+          label="Label Name"
+          value={issueLabel}
+          onChange={(event) => setIssueLabel(event.target.value)}
+        />
+        <br />
+        <br />
+        <Center>
+          <Button
+            variant="outline"
+            text
+            color="green"
+            onClick={handleCreateIssue}
+            disabled={!isToken}
+          >
+            Create Issue
           </Button>
         </Center>
       </Modal>

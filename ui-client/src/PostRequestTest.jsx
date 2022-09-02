@@ -34,7 +34,6 @@ const PostRequestTest = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    console.log("here");
     fetchData();
   }, []);
 

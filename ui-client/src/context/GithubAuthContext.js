@@ -8,6 +8,7 @@ const GithubAuthContext = createContext({});
 
 const GithubAuthProvider = (props) => {
   const [token, setToken] = useState("");
+  const [owner, setOwner] = useState("");
   const [isToken, setIstoken] = useState(false);
 
   const [issues, setIssues] = useState([]);
@@ -32,6 +33,49 @@ const GithubAuthProvider = (props) => {
       });
   }, []);
 
+  const getUser = useCallback((auth) => {
+    const requestHeaders = {
+      headers: {
+        Authorization: "Token " + auth,
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "X-Requested-With": "XMLHttpRequest",
+      },
+    };
+    axios
+      .get(
+        "https://enigmatic-reaches-35840.herokuapp.com/https://api.github.com/user",
+        requestHeaders
+      )
+      .then((response) => {
+        setOwner(response.data.login);
+      });
+  }, []);
+
+  const createIssue = useCallback((label, issueName, repo, auth, user) => {
+    const requestHeaders = {
+      headers: {
+        Authorization: "Token " + auth,
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "X-Requested-With": "XMLHttpRequest",
+      },
+    };
+
+    axios
+      .post(
+        `https://enigmatic-reaches-35840.herokuapp.com/https://api.github.com/repos/${user}/${repo}/issues`,
+        {
+          title: issueName,
+          labels: [label],
+        },
+        requestHeaders
+      )
+      .then(() => {
+        fetchIssues(label, auth);
+      });
+  }, []);
+
   const getToken = useCallback(async (code) => {
     axios
       .post(
@@ -52,6 +96,7 @@ const GithubAuthProvider = (props) => {
       .then((response) => {
         setIstoken(true);
         setToken(getTokenAccess(response.data));
+        getUser(getTokenAccess(response.data));
       });
   }, []);
 
@@ -60,6 +105,8 @@ const GithubAuthProvider = (props) => {
     getToken,
     isToken,
     fetchIssues,
+    createIssue,
+    owner,
     issues,
   };
 
