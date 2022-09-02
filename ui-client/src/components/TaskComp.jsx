@@ -164,7 +164,6 @@ const TaskComp = (props) => {
   const [noPendency, setNoPendency] = useState([]);
 
   useEffect(() => {
-    console.log("here");
     fetchData();
     fetchTasks();
   }, []);
