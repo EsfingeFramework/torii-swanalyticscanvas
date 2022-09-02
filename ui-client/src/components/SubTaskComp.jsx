@@ -247,7 +247,6 @@ const SubTaskComp = (props) => {
   const apiDeleteTask = "http://localhost:8080/api/subTask/" + id;
 
   const deleteData = () => {
-    console.log("here");
     fetchData();
   };
 

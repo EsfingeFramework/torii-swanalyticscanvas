@@ -92,7 +92,6 @@ const ProjectTest = () => {
   const [gets, setGets] = useState([]);
 
   useEffect(() => {
-    console.log("here");
     fetchData();
   }, []);
 

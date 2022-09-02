@@ -10,6 +10,7 @@ import {
 import Grid from "@mui/material/Grid";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import GithubLogin from "./services/githubAuth/GithubLogin";
 
 const Login = () => {
   const [username, setUsername] = React.useState("");
@@ -26,6 +27,9 @@ const Login = () => {
       routeChange("/projects");
     }
   }, []);
+
+  const onSuccess = (response) => console.log(response);
+  const onFailure = (response) => console.error(response);
 
   const requestOptions = {
     method: "POST",
@@ -104,6 +108,9 @@ const Login = () => {
             <Button onClick={() => navigate("/signup")} variant="outlined">
               Sign up
             </Button>
+          </Center>
+          <Center>
+            <GithubLogin onSuccess={onSuccess} onFailure={onFailure} />
           </Center>
         </Grid>
         <Grid item md={5} xs={12}>
